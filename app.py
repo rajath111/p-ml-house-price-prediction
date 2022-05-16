@@ -11,9 +11,8 @@ predict_input_args.add_argument('ptratio', type=float, location='form')
 app = Flask(__name__)
 api = Api(app)
 
-
 model = None
-with open('modelfile', 'rb') as f:
+with open('model/modelfile', 'rb') as f:
     model = pickle.load(f)
 
 class Predict(Resource):

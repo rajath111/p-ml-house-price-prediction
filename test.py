@@ -2,7 +2,7 @@ import re
 import pandas as pd
 import requests
 
-data = pd.read_csv('test_data.csv')
+data = pd.read_csv('data/test_data.csv')
 
 BASE_URI = 'http://127.0.0.1:4300/'
 
