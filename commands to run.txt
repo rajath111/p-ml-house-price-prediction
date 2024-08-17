@@ -1,5 +1,0 @@
-pip install -U pip
-python -m venv boston-env
-boston-env\Scripts\activate
-pip install -r requirements.txt
-python app.py

@@ -1,8 +1,7 @@
-import re
 import pandas as pd
 import requests
 
-data = pd.read_csv('data/test_data.csv')
+data = pd.read_csv('../data/test_data.csv')
 
 BASE_URI = 'http://127.0.0.1:8080/'
 
@@ -20,5 +19,4 @@ for i, d in data.iterrows():
     print(d[0], d[1], d[2])
     print(result.raw)
     
-
     break

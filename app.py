@@ -1,35 +1,31 @@
-from flask import Flask, request
-from flask_restful import Api, Resource, reqparse
-import pickle
+from flask import Flask, Response
+from flask_restful import Api, Resource
 
-predict_input_args = reqparse.RequestParser()
-predict_input_args.add_argument('rm', type=float)
-predict_input_args.add_argument('lstst', type=float)
-predict_input_args.add_argument('ptratio', type=float)
-
+from input_parser import PredictRequestParser
+from model_loader import ModelLoader
 
 app = Flask(__name__)
 api = Api(app)
+parser = PredictRequestParser()
+model = ModelLoader.load()
 
-model = None
-with open('model/modelfile', 'rb') as f:
-    model = pickle.load(f)
 
 class Predict(Resource):
     def post(slef):
-        # print('Request json {}'.format(request.json))
-        args = predict_input_args.parse_args()
-        predicted_value = model.predict([[args['rm'], args['lstst'], args['ptratio']]])
-        return {'PredictedPrice': predicted_value[0]}
+        if model is None:
+            return Response({'message': 'Model loading failed'}, status=500)
+            
+        try:
+            args = parser.parse_args()
+        except Exception as e:
+            print(e)
+            return Response("Incorrect Input", status=400)
 
-class Hello(Resource):
-    def get(self):
-        return 'Hello there...'
-        
+        predicted_value = model.predict([[args.get('rm'), args.get('lstst'), args.get('ptratio')]])
+        return {'PredictedPrice': predicted_value[0]}
 
 
 api.add_resource(Predict, '/predict')
-api.add_resource(Hello, '/')
 
 if __name__ == '__main__':
     app.run(debug=True, port=8080, host='0.0.0.0')
